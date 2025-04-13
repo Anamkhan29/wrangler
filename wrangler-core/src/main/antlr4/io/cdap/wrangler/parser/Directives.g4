@@ -64,6 +64,8 @@ directive
     | stringList
     | numberRanges
     | properties
+    | byteSizeArg
+    | timeDurationArg
   )*?
   ;
 
@@ -140,7 +142,15 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | BYTE_SIZE | TIME_DURATION
+ ;
+
+byteSizeArg
+ : BYTE_SIZE
+ ;
+
+timeDurationArg
+ : TIME_DURATION
  ;
 
 ecommand
@@ -273,6 +283,14 @@ String
  : '\'' ( EscapeSequence | ~('\'') )* '\''
  | '"'  ( EscapeSequence | ~('"') )* '"'
  ;
+
+BYTE_SIZE : DIGIT+ ('.' DIGIT+)? BYTE_UNIT;
+TIME_DURATION : DIGIT+ ('.' DIGIT+)? TIME_UNIT;
+
+
+fragment DIGIT : [0-9];
+fragment BYTE_UNIT : ('B'|'KB'|'MB'|'GB'|'TB'|'KiB'|'MiB'|'GiB'|'TiB');
+fragment TIME_UNIT : ('ns'|'ms'|'s'|'m'|'h'|'d');
 
 EscapeSequence
    :   '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')
